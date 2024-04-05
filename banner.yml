@@ -1,0 +1,56 @@
+---
+- name: Configure the login banner
+  hosts: facilitymdfs
+  connection: network_cli
+  gather_facts: false
+
+  tasks:
+
+    - name: remove banner motd, log logins 
+      ios_config:
+        lines:
+         - no banner motd
+         - login on-failure log every 1
+         - login on-success log every 1
+
+    - name: Configure the login banner
+      ios_banner:
+    #You can change below value to (motd, login, incoming or slip-ppp)
+        banner: login
+        text: |
+          #######################################################
+          #                                                     #
+          #     Only authorized users are allowed on this       #
+          #     system. Your use of this system is being logged  #
+          #     Be aware unauthorized access and use is         #
+          #     subject to prosecution to the full extent       #
+          #     of the law                                      #
+          #                                                     #
+
+          #######################################################
+          
+ 
+        state: present
+
+- name: Configure banner exec
+  hosts: facilitymdfs
+  connection: network_cli
+  gather_facts: false
+
+  tasks:
+
+    - name: Configure the exec banner
+      ios_banner:
+    #You can change below value to (motd, login, incoming or slip-ppp)
+        banner: exec
+        text: |
+          #######################################################
+          #     This system is for Authorized Personnel Only    #
+          #        PLEASE EXIT\LOGOUT NOW IF YOU ARE NOT        #
+          #             SUPPOSED TO BE ON THIS DEVICE           #
+          #     You have  entered this system                   #
+          #     $(hostname) on line $(line). Be advised your    #
+          #     actions are logged. and audits are performed    #
+          #     daily.                                          #
+          #######################################################
+        state: present
